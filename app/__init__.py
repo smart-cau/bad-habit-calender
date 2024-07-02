@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 
 from app.models.user import User
 
+
 load_dotenv(".env")
 
 
@@ -38,18 +39,8 @@ def create_app(test_config=None):
     def hello_world():
         return render_template("index.html")
 
-    @app.route("/login")
-    def login_page():
-        return render_template("login.html")
-
-    @app.route("/signup")
-    def signup_page():
-        return render_template("signup.html")
-
-    @app.route("/enroll")
-    def enroll_page():
-        return render_template("enroll.html", type="enroll")
-
+    from app.routes.member import member_bp
+    app.register_blueprint(member_bp)
     # custom error handlers
 
     return app
