@@ -4,3 +4,6 @@ instance/*
 .webassets-cache
 .env
 .idea
+
+__pycache__
+venv
