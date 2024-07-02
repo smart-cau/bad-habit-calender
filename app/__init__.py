@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 from app.models.user import User
 
-load_dotenv('.env')
+load_dotenv(".env")
 
 
 def create_app(test_config=None):
@@ -14,17 +14,17 @@ def create_app(test_config=None):
 
     # config
     app.config.from_mapping(
-        JWT_SECRET_KEY=os.environ.get('JWT_SECRET_KEY'),
-        MONGO_URI=os.getenv('MONGO_URI'),
+        JWT_SECRET_KEY=os.environ.get("JWT_SECRET_KEY"),
+        MONGO_URI=os.getenv("MONGO_URI"),
     )
 
     if test_config is not None:
         app.config.update(test_config)
 
     # init extensions
-    client = MongoClient(app.config['MONGO_URI'], 27017)
+    client = MongoClient(app.config["MONGO_URI"], 27017)
     app.db = client.badHabitCal
-    db = client.get_database('badHabitCal')
+    db = client.get_database("badHabitCal")
 
     # init models
     user_model = User(db)
@@ -42,10 +42,13 @@ def create_app(test_config=None):
     def login_page():
         return render_template("login.html")
 
-
     @app.route("/signup")
     def signup_page():
         return render_template("signup.html")
+
+    @app.route("/enroll")
+    def enroll_page():
+        return render_template("enroll.html", type="enroll")
 
     # custom error handlers
 
