@@ -4,7 +4,7 @@ const tempData = [
 ];
 const cElm = (elementType) => document.createElement(elementType);
 
-const showCurrentDayHabbit = (data) => {
+const showCurrentDayhabit = (data) => {
   const ul = cElm("ul");
   ul.className = "overflow-y-auto h-[calc(100vh-35rem)] w-full space-y-4";
   data.forEach((item) => {
@@ -23,11 +23,11 @@ const showCurrentDayHabbit = (data) => {
   return ul;
 };
 
-const updateCurrentDayHabbit = (data) => {
-  const elm = showCurrentDayHabbit(tempData);
-  const currentDayHabbit = document.querySelector("#currentDayHabbit");
-  currentDayHabbit.innerHTML = "";
-  currentDayHabbit.appendChild(elm);
+const updateCurrentDayhabit = (data) => {
+  const elm = showCurrentDayhabit(tempData);
+  const currentDayhabit = document.querySelector("#currentDayhabit");
+  currentDayhabit.innerHTML = "";
+  currentDayhabit.appendChild(elm);
 };
 
-updateCurrentDayHabbit(tempData);
+updateCurrentDayhabit(tempData);

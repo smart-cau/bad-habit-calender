@@ -10,7 +10,7 @@
 
 <body class="bg-slate-200">
     <div class="max-w-[420px] bg-white h-screen m-auto">
-        <header class="relative px-12 py-8 flex justify-between items-center">
+        <header class="relative px-6 py-8 flex justify-between items-center">
             <ul class="flex-1">
                 <li>
                     <a href="/">
@@ -22,14 +22,14 @@
                 {% if not type == 'enroll' %}
                 <li>
                     <a href="/enroll"
-                        class="flex gap-2 items-center border rounded-md py-2 px-4 border-[#6D29F6] text-[#6D29F6]">
+                        class="flex gap-2 items-center border rounded-md py-1 px-2 border-[#6D29F6] text-[#6D29F6]">
                         <img src="/static/images/plus.png" alt="plus">
-                        <span>등록하기</span>
+                        <span class="text-sm">등록하기</span>
                     </a>
                 </li>
                 {% endif %}
                 <li>
-                    <button class="flex gap-2 items-center rounded-md py-2 pl-4 text-[#8F9BB3]">
+                    <button class="flex gap-2 items-center rounded-md py-1 pl-2 text-[#8F9BB3]">
                         <img src="/static/images/hamberger.png" alt="hamberger">
                         <span>메뉴</span>
                     </button>

@@ -40,7 +40,7 @@ const fullCalendar = () => {
       updateCurrentDay(date.toLocaleDateString("en-CA"));
       view.calendar.gotoDate(date);
 
-      // updateCurrentDayHabbit(tempData);
+      // updateCurrentDayhabit(tempData);
     },
     locale: "ko",
     initialView: "dayGridMonth",
