@@ -2,10 +2,11 @@
 
 <main class="px-4">
   <div class="flex justify-end">
-    <button class="flex gap-2 items-center border rounded-md py-1 px-2 border-[#6D29F6] text-[#6D29F6]">
+    <a class="flex gap-2 items-center border rounded-md py-1 px-2 border-[#6D29F6] text-[#6D29F6]"
+      href="/enroll/create">
       <img src="/static/images/plus.png" alt="plus" />
-      <span>저장하기</span>
-    </button>
+      <span>추가하기</span>
+    </a>
   </div>
   <section>
     {% for habit in habits %}
@@ -20,6 +21,12 @@
       </div>
     </div>
     {% endfor %}
+    {% if not habits %}
+    <div class="flex items-center justify-center h-[20rem] text-center flex-col gap-3">
+      <span>나쁜 습관이 없네요!!</span>
+      <a href="/enroll/create" class="underline underline-offset-4 font-light">추가하러가기</a>
+    </div>
+    {% endif %}
   </section>
 </main>
 <script>
