@@ -34,9 +34,9 @@ def create_app(test_config=None):
     app.user_model = user_model
 
     # import and register blueprints
-    @app.route('/')
+    @app.route("/")
     def hello_world():
-        return render_template('index.html')
+        return render_template("index.html")
 
     # custom error handlers
 

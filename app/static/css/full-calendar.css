@@ -1,0 +1,41 @@
+:root {
+  --fc-today-bg-color: white;
+}
+
+#calendar {
+  color: #222B45;
+}
+
+.fc-theme-standard td,
+.fc-theme-standard th,
+.fc-theme-standard .fc-scrollgrid {
+  border: 0px;
+}
+
+.fc-daygrid-day-events {
+  display: none;
+}
+
+.fc-clicked-day {
+  background-color: #735BF2;
+  border-radius: 0.8rem;
+  color: white;
+}
+
+.fc .fc-daygrid-day-top {
+  margin: 0.5rem;
+  justify-content: center;
+}
+
+.fc-header-toolbar>.fc-toolbar-chunk button {
+  background-color: white;
+  color: #222B45;
+  border: 1px solid #CED3DE;
+  padding: 0.4rem;
+  border-radius: 0.5rem;
+}
+
+.fc-col-header-cell.fc-day {
+  color: #8F9BB3;
+  font-weight: 300;
+}
