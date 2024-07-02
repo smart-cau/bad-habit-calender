@@ -39,6 +39,8 @@ const fullCalendar = () => {
       sessionStorage.setItem("currentDay", date.toLocaleDateString("en-CA"));
       updateCurrentDay(date.toLocaleDateString("en-CA"));
       view.calendar.gotoDate(date);
+
+      // updateCurrentDayHabbit(tempData);
     },
     locale: "ko",
     initialView: "dayGridMonth",
@@ -50,6 +52,10 @@ const fullCalendar = () => {
   );
   if (currentDay) {
     currentDay.classList.add("fc-clicked-day");
+    sessionStorage.setItem(
+      "currentDay",
+      new Date().toLocaleDateString("en-CA")
+    );
   }
 
   document.querySelector(".fc-prev-button").addEventListener("click", () => {
