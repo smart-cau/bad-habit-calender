@@ -6,20 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>나습달</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+    <link rel="stylesheet" href="/static/css/full-calendar.css">
 </head>
 
 <body class="bg-slate-200">
-    <div class="w-[420px] bg-white h-screen m-auto">
+    <div class="max-w-[420px] bg-white h-screen m-auto">
         <header class="px-12 py-8 flex justify-between items-center">
             <ul>
-                <li><img src="/static/images/나습달.png" alt="나습달 logo"></li>
+                <li><a href="/"><img src="/static/images/나습달.png" alt="나습달 logo"></a></li>
             </ul>
             <ul class="flex gap-2 items-center text-sm">
                 <li><a href="#" class="border rounded-md py-2 px-4 border-[#6D29F6] text-[#6D29F6]">등록하기</a></li>
                 <li><button href="#" class="rounded-md py-2 px-4 text-[#8F9BB3]">메뉴</button></li>
             </ul>
         </header>
+        <main class="px-4">
+            <div id="calendar" class="h-[27rem]"></div>
+        </main>
     </div>
+    <script src="/static/js/full-calender.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fullCalendar();
+        });
+    </script>
 </body>
 
 </html>
