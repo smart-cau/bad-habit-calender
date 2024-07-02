@@ -38,6 +38,15 @@ def create_app(test_config=None):
     def hello_world():
         return render_template("index.html")
 
+    @app.route("/login")
+    def login_page():
+        return render_template("login.html")
+
+
+    @app.route("/signup")
+    def signup_page():
+        return render_template("signup.html")
+
     # custom error handlers
 
     return app
