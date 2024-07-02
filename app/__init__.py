@@ -7,9 +7,9 @@ def create_app():
     # init extensions
 
     # import and register blueprints
-    @app.route('/')
+    @app.route("/")
     def hello_world():
-        return render_template('index.html')
+        return render_template("index.html")
 
     # custom error handlers
 
