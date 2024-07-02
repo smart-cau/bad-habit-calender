@@ -23,8 +23,10 @@ class Habit:
 
         if str(habit['user_id']) != user_id:
             raise PermissionError('unauthenticated user')
-
-        return self.collection.delete_one({'_id': ObjectId(habit['_id'])}).deleted_count
+        result = self.collection.delete_one({'_id': ObjectId(habit['_id'])})
+        if result.deleted_count == 0:
+            raise ValueError('habit deleted')
+        return True
 
     def get_by_id(self, habit_id):
         habit = self.collection.find_one({'_id': ObjectId(habit_id)})
