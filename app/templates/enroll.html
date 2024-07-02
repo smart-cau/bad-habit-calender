@@ -1,11 +1,48 @@
-{% extends "layout/base.html" %}
-{% block content %}
+{% extends "layout/base.html" %} {% block content %}
 
 <main class="px-4">
-  <button class="flex gap-2 items-center border rounded-md py-1 px-2 border-[#6D29F6] text-[#6D29F6] float-right">
-    <img src="/static/images/plus.png" alt="plus">
-    <span>저장하기</span>
-  </button>
+  <div class="flex justify-end">
+    <button class="flex gap-2 items-center border rounded-md py-1 px-2 border-[#6D29F6] text-[#6D29F6]">
+      <img src="/static/images/plus.png" alt="plus" />
+      <span>저장하기</span>
+    </button>
+  </div>
+  <section>
+    {% for habit in habits %}
+    <div class="flex gap-4 items-center justify-between py-6 px-2">
+      <span>{{ habit.content }}</span>
+      <div onclick="onChangePopup({{ habit._id }})" class="relative cursor-pointer">
+        <img src="/static/images/threedot.png" alt="submenu" />
+        <div
+          class="popup popup-{{ habit._id }} hidden absolute right-0 top-0 bg-[#EC1A1A] text-[#FFF2F2] rounded-md py-1 px-2 z-10 w-max">
+          <button onclick="onRemoveHabit({{ habit._id }})">삭제하기</button>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </section>
 </main>
+<script>
+  const onChangePopup = (id) => {
+    const popup = document.querySelector(`.popup-${id}`);
+    popup.style.display = "block";
+  };
+  const onCloseAllPopups = () => {
+    const popups = document.querySelectorAll(".popup");
+    popups.forEach((popup) => {
+      popup.style.display = "none";
+    });
+  };
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".popup") && !e.target.closest("[onclick]")) {
+      onCloseAllPopups();
+    }
+  });
+  const onRemoveHabit = async (id) =>
+    await fetch(`/api/habit/${id}`, {
+      method: "DELETE",
+    }).then((res) => { if (res.ok) { window.location.reload(); } })
+      .catch((err) => alert(err));
+</script>
 
 {% endblock %}
