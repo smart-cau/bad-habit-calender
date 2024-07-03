@@ -1,7 +1,4 @@
-from flask import current_app, g
 from werkzeug.security import check_password_hash
-
-from app import User
 
 
 class UserService:
@@ -20,4 +17,7 @@ class UserService:
 
     @staticmethod
     def check_password(user, password: str):
-        return check_password_hash(user['password'], password)
+        return check_password_hash(user["password"], password)
+
+    def is_user_exist(self, email: str):
+        return self.user_model.get_by_email(email) is not None
