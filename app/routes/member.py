@@ -21,3 +21,8 @@ def enroll_page():
         {"content": "유튜브 2시가 이상 시청 해버리기", "_id": "3"},
     ]
     return render_template("enroll.html", type="enroll", habits=tempData)
+
+
+@member_bp.route("/enroll/create", methods=["GET"])
+def enroll_create_page():
+    return render_template("enroll_create.html", type="enroll_create")

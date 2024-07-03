@@ -19,7 +19,7 @@
                 </li>
             </ul>
             <ul class="flex gap-2 items-center text-sm">
-                {% if not type == 'enroll' %}
+                {% if not type == 'enroll' and not type == 'enroll_create' %}
                 <li>
                     <a href="/enroll"
                         class="flex gap-2 items-center border rounded-md py-1 px-2 border-[#6D29F6] text-[#6D29F6]">
@@ -35,11 +35,14 @@
                     </button>
                 </li>
             </ul>
-            {% if type == 'enroll' %}
             <div class="text-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                {% if type == 'enroll' %}
                 나쁜 습관 목록
+                {% endif %}
+                {% if type == 'enroll_create' %}
+                나쁜 습관 추가하기
+                {% endif %}
             </div>
-            {% endif %}
         </header>
         {% block content %}{% endblock %}
     </div>
