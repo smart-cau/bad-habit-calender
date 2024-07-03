@@ -1,13 +1,18 @@
 from functools import wraps
-from flask import request, redirect, url_for
+from flask import redirect, url_for
+from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity
 
 
-def when_logged_in(f):
-    @wraps(f)
-    def decorated_func(*args, **kwargs):
-        if request.cookies.get("user_id"):
-            return f(*args, **kwargs)
-        else:
-            return redirect(url_for("router.auth.login_page"))
+def jwt_or_redirect():
+    def wrapper(fn):
+        @wraps(fn)
+        def decorator(*args, **kwargs):
+            verify_jwt_in_request(optional=True)
+            if not get_jwt_identity():
+                return redirect(url_for("router.auth.login_page"))
+            else:
+                return fn(*args, **kwargs)
 
-    return decorated_func
+        return decorator
+
+    return wrapper

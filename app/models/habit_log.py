@@ -15,17 +15,17 @@ class HabitLog:
 
         result = []
         for log in logs:
-            result.append({'log_id': log['_id'], 'date': log['date'],
+            result.append({'_id': log['_id'], 'date': log['date'],
                            'habit_id': log['habit_id'], 'check': log['check']})
 
         return result
 
-    def set_check(self, log_id: str, check: bool):
+    def set_check(self, log_id: str):
         habit_log = self.collection.find_one({'_id': ObjectId(log_id)})
         if habit_log is None:
             raise ValueError(f'habit_log {log_id} not found')
 
-        result = self.collection.update_one({'_id': ObjectId(log_id)}, {'$set': {'check': check}})
+        result = self.collection.update_one({'_id': ObjectId(log_id)}, {'$set': {'check': not habit_log['check']}})
         if result.modified_count == 0:
             raise ValueError(f'habit_log {log_id} not found')
 

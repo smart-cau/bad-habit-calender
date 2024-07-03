@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template
+from flask import Flask
 from pymongo import MongoClient
 from dotenv import load_dotenv
 
@@ -10,6 +10,7 @@ from app.models.user import User
 from app.services.habit_log_service import HabitLogService
 from app.services.habit_service import HabitService
 from app.services.user_service import UserService
+from flask_jwt_extended import JWTManager
 
 load_dotenv(".env")
 
@@ -21,7 +22,13 @@ def create_app(test_config=None):
     app.config.from_mapping(
         JWT_SECRET_KEY=os.environ.get("JWT_SECRET_KEY"),
         MONGO_URI=os.getenv("MONGO_URI"),
+        JWT_TOKEN_LOCATION="cookies",
+        JWT_ACCESS_COOKIE_PATH="/",
+        JWT_REFRESH_COOKIE_PATH="/refresh",
+        JWT_COOKIE_CSRF_PROTECT=False,
     )
+
+    jwt = JWTManager(app)
 
     if test_config is not None:
         app.config.update(test_config)

@@ -2,11 +2,18 @@ from flask import (
     Blueprint,
     render_template,
     request,
-    make_response,
     jsonify,
     current_app,
 )
-from app.services.user_service import UserService
+from flask_jwt_extended import (
+    create_access_token,
+    jwt_required,
+    get_jwt_identity,
+    set_access_cookies,
+    set_refresh_cookies,
+    unset_jwt_cookies,
+)
+
 
 auth_router = Blueprint("auth", __name__)
 
@@ -42,18 +49,34 @@ def login():
     password = body.get("password")
 
     if not current_app.user_service.is_user_exist(id):
-        return jsonify({"message": "비밀번호 또는 아이디가 틀렸습니다."}), 400
+        return jsonify({"message": "비밀번호 또는 아이디가 틀렸습니다."}), 401
 
     user = current_app.user_service.get_by_email(id)
     if not current_app.user_service.check_password(user, password):
-        return jsonify({"message": "비밀번호 또는 아이디가 틀렸습니다."}), 400
+        return jsonify({"message": "비밀번호 또는 아이디가 틀렸습니다."}), 401
 
-    response = make_response(jsonify({"message": "success"}))
-    response.set_cookie("user_id", str(user["_id"]), httponly=True, samesite="Strict")
+    response = jsonify({"message": "success"})
+    access_token, refresh_token = current_app.user_service.create_jwt(user)
 
-    return response
+    set_access_cookies(response, access_token)
+    set_refresh_cookies(response, refresh_token)
+
+    return response, 200
+
+
+@auth_router.route("/refresh", methods=["POST"])
+@jwt_required(refresh=True)
+def refresh():
+    current_user = get_jwt_identity()
+    access_token = create_access_token(identity=current_user)
+
+    resp = jsonify({"refresh": True})
+    set_access_cookies(resp, access_token)
+    return resp, 200
 
 
 @auth_router.route("/api/logout", methods=["POST"])
 def logout():
-    pass
+    resp = jsonify({"logout": True})
+    unset_jwt_cookies(resp)
+    return resp, 200
