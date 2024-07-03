@@ -1,19 +1,14 @@
 from flask import Blueprint, render_template
 
-member_bp = Blueprint("member", __name__)
+auth_router = Blueprint("auth", __name__)
 
 
-@member_bp.route("/login", methods=["GET"])
-def login_page():
-    return render_template("login.html")
+@auth_router.route("/", methods=["GET"])
+def hello_world():
+    return render_template("index.html")
 
 
-@member_bp.route("/signup", methods=["GET"])
-def signup_page():
-    return render_template("signup.html")
-
-
-@member_bp.route("/enroll", methods=["GET"])
+@auth_router.route("/enroll", methods=["GET"])
 def enroll_page():
     tempData = [
         {"content": "개발 25시간 이상 해버리기", "_id": "1"},
@@ -23,6 +18,6 @@ def enroll_page():
     return render_template("enroll.html", type="enroll", habits=tempData)
 
 
-@member_bp.route("/enroll/create", methods=["GET"])
+@auth_router.route("/enroll/create", methods=["GET"])
 def enroll_create_page():
     return render_template("enroll_create.html", type="enroll_create")
