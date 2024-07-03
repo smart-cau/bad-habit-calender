@@ -9,7 +9,7 @@
       <div class="text-[#222B45]" id="currentDay"></div>
     </div>
     {% for habit in habits %}
-    <button onclick="onToggleCheck({{ habit._id }})" class="flex gap-3 items-center">
+    <button onclick="toggleHabit('{{ habit._id }}')" class="flex gap-3 items-center">
       {% if habit.check %}
       <img src="/static/images/check.png" alt="check">
       {% else %}
@@ -26,16 +26,29 @@
     queryParam.get("currentDay") || new Date().toLocaleDateString("en-CA");
   const currentDayElement = document.getElementById("currentDay");
   currentDayElement.innerHTML = currentDate.replace(/-/g, " / ");
-  
-  const onToggleCheck = async (habitId) => 
-    await fetch(`/api/enroll/${habitId}/check`, {
-      method: "PATCH",
-    }).then((res) => {
-      if(res.ok) {
-        window.location.reload();
-      }
-    }).catch((err) => {
-      alert(err);
-    });
+
+  const toggleHabit = async (_id) => {
+    await fetch("/api/habit/toggle", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ _id }),
+    }).then((res) => res.json())
+      .then((res) => {
+        if (res.message) {
+          if (res.message == "success") {
+            alert("변경되었습니다.");
+            window.location.reload();
+            return;
+          }
+        } else {
+          alert("변경에 실패했습니다.");
+        }
+      }).catch((err) => {
+        console.error(err);
+        alert("변경에 실패했습니다.");
+      });
+  }
 </script>
 {% endblock %}

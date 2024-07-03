@@ -38,16 +38,24 @@ def enroll_register_page():
     all_habits = current_app.habit_service.get_habits(user_id)
     habit_logs = current_app.habit_log_service.get_list(user_id, date)
 
+    if not habit_logs:
+        habit_logs = [
+            {"_id": habit["_id"], "content": habit["content"], "check": False}
+            for habit in all_habits
+        ]
+        return render_template(
+            "enroll_register.html", type="enroll_register", habits=habit_logs
+        )
+
     for habit in all_habits:
-        if not any(log["habit_id"] == habit["_id"] for log in habit_logs):
+        if habit["_id"] not in [log["habit_id"] for log in habit_logs]:
             habit_logs.append(
                 {
-                    "habit_id": habit["_id"],
+                    "_id": habit["_id"],
                     "content": habit["content"],
                     "check": False,
                 }
             )
-
     return render_template(
         "enroll_register.html", type="enroll_register", habits=habit_logs
     )
