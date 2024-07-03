@@ -21,3 +21,8 @@ def enroll_page():
 @auth_router.route("/enroll/create", methods=["GET"])
 def enroll_create_page():
     return render_template("enroll_create.html", type="enroll_create")
+
+
+@auth_router.route("/enroll/register", methods=["GET"])
+def enroll_register_page():
+    return render_template("enroll_register.html", type="enroll_register")
