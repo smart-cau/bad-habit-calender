@@ -5,10 +5,6 @@ const fullCalendar = () => {
    * @return {void}
    */
   const updateCurrentDay = (dateString) => {
-    const prevClickedDay = document.querySelector(".fc-clicked-day");
-    if (prevClickedDay) {
-      prevClickedDay.classList.remove("fc-clicked-day");
-    }
     const clickeDay = document.querySelector(
       `td[data-date="${dateString}"] .fc-daygrid-day-top`
     );
@@ -16,6 +12,10 @@ const fullCalendar = () => {
       clickeDay.classList.add("fc-clicked-day");
     }
   };
+
+  const queryParam = new URLSearchParams(window.location.search);
+  const currentDate =
+    queryParam.get("currentDay") || new Date().toLocaleDateString("en-CA");
 
   const calendarEl = document.getElementById("calendar");
   const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -27,6 +27,7 @@ const fullCalendar = () => {
     titleFormat: {
       month: "short",
     },
+    initialDate: currentDate,
     dayCellContent: function (info) {
       const number = document.createElement("button");
       number.classList.add("fc-daygrid-day-number");
@@ -35,35 +36,20 @@ const fullCalendar = () => {
         html: number.outerHTML,
       };
     },
-    dateClick: ({ date, view }) => {
-      sessionStorage.setItem("currentDay", date.toLocaleDateString("en-CA"));
-      updateCurrentDay(date.toLocaleDateString("en-CA"));
-      view.calendar.gotoDate(date);
-
-      // updateCurrentDayhabit(tempData);
+    dateClick: ({ date }) => {
+      window.location.href = `?currentDay=${date.toLocaleDateString("en-CA")}`;
     },
     locale: "ko",
     initialView: "dayGridMonth",
   });
   calendar.render();
 
-  const currentDay = document.querySelector(
-    ".fc-day-today .fc-daygrid-day-top"
-  );
-  if (currentDay) {
-    currentDay.classList.add("fc-clicked-day");
-    sessionStorage.setItem(
-      "currentDay",
-      new Date().toLocaleDateString("en-CA")
-    );
-  }
+  updateCurrentDay(currentDate);
 
   document.querySelector(".fc-prev-button").addEventListener("click", () => {
-    const currentDate = sessionStorage.getItem("currentDay");
     updateCurrentDay(currentDate);
   });
   document.querySelector(".fc-next-button").addEventListener("click", () => {
-    const currentDate = sessionStorage.getItem("currentDay");
     updateCurrentDay(currentDate);
   });
 };
