@@ -7,7 +7,7 @@ router.register_blueprint(auth_router)
 
 
 @router.route("/", methods=["GET"])
-def hello_world():
+def home_page():
     return render_template("index.html")
 
 
