@@ -1,4 +1,5 @@
 from werkzeug.security import check_password_hash
+from flask_jwt_extended import create_access_token
 
 
 class UserService:
@@ -21,3 +22,8 @@ class UserService:
 
     def is_user_exist(self, email: str):
         return self.user_model.get_by_email(email) is not None
+
+    def create_jwt(self, user):
+        access_token = create_access_token(identity=str(user["_id"]))
+        refresh_token = create_access_token(identity=str(user["_id"]))
+        return access_token, refresh_token
