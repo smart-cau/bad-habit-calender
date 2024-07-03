@@ -27,7 +27,7 @@ class HabitLogService:
                 "user_id": ObjectId(user_id_str),
                 "habit_id": ObjectId(habit_id_str),
                 "date": date,
-                "check": False,
+                "check": True,
             }
             result.append(habit_log)
 
@@ -39,11 +39,20 @@ class HabitLogService:
             user_id, datetime.strptime(date, "%Y-%m-%d")
         )
 
-    def set_check(self, log_id: str, user_id: str):
-        try:
-            self.habit_log_model.set_check(log_id)
-        except ValueError as e:
-            raise ValueError("Invalid log_id")
-
+    def set_check(self, user_id: str, date: str, habit_id):
         self.user_service.get_by_id(user_id)
-        return self.habit_log_model.set_check(log_id)
+        self.habit_service.get_by_id(habit_id)
+        return self.habit_log_model.set_check(user_id, date, habit_id)
+
+    def get_date_logs(self, user_id: str, date: str):
+        self.user_service.get_by_id(user_id)
+        logs = self.habit_log_model.get_list(user_id, datetime.strptime(date, "%Y-%m-%d"))
+
+        habits = self.habit_service.get_habits(user_id)
+        enrolled_habit_ids = {log['habit_id'] for log in logs}
+        results = [{'_id': habit['_id'],
+                    'content': habit['content'], 'check': habit['_id'] in enrolled_habit_ids
+                    }
+                   for habit in habits]
+
+        return results
