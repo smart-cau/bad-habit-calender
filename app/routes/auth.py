@@ -23,7 +23,16 @@ def signup_page():
 
 @auth_router.route("/api/signup", methods=["POST"])
 def signup():
-    pass
+    body = request.get_json()
+    id = body.get("id")
+    password = body.get("password")
+
+    if current_app.user_service.is_user_exist(id):
+        return jsonify({"message": "이미 존재하는 아이디입니다."}), 400
+
+    current_app.user_service.create_user(id, password)
+
+    return jsonify({"message": "success"})
 
 
 @auth_router.route("/api/login", methods=["POST"])

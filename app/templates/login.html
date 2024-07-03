@@ -17,56 +17,58 @@
                     <h1 class="title">나습달</h1>
                 </a>
                 <label for="id">아이디</label>
-                <input class="border w-full p-3 rounded-md placeholder:text-[#8F9BB3] border-[#EDF1F7]" type="text" id="id"
-                    name="id" placeholder="아이디를 입력해주세요">
+                <input class="border w-full p-3 rounded-md placeholder:text-[#8F9BB3] border-[#EDF1F7]" type="text"
+                    id="id" name="id" placeholder="아이디를 입력해주세요">
                 <label for="password">비밀번호</label>
-                <input class="border w-full p-3 rounded-md placeholder:text-[#8F9BB3] border-[#EDF1F7]" type="password" id="password"
-                    name="password" placeholder="비밀번호를 입력해주세요">
+                <input class="border w-full p-3 rounded-md placeholder:text-[#8F9BB3] border-[#EDF1F7]" type="password"
+                    id="password" name="password" placeholder="비밀번호를 입력해주세요">
             </div>
             <div class="flex justify-between gap-4 pb-8">
-                <button type="submit" href="/" class="flex-1 bg-[#CED3DE] text-[#707070] py-2 rounded-md text-center">로그인하기</button>
+                <button type="submit" href="/"
+                    class="flex-1 bg-[#CED3DE] text-[#707070] py-2 rounded-md text-center">로그인하기</button>
                 <a href="/signup" class="flex-1 bg-[#735BF2] text-[#FFFFFF] py-2 rounded-md text-center">회원가입</a>
             </div>
         </form>
     </div>
-</body>
+    <script>
+        const onSubmitLogin = (e) => {
+            e.preventDefault();
+            const id = document.getElementById('id').value;
+            const password = document.getElementById('password').value;
+            if (id === '' || password === '') {
+                alert('아이디와 비밀번호를 입력해주세요');
+                return;
+            }
 
-<script>
-    const onSubmitLogin = (e) => {
-        e.preventDefault();
-        const id = document.getElementById('id').value;
-        const password = document.getElementById('password').value;
-        if (id === '' || password === '') {
-            alert('아이디와 비밀번호를 입력해주세요');
-            return;
+            fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id,
+                    password,
+                }),
+            })
+                .then((res) => res.json())
+                .then((res) => {
+                    if (res.message) {
+                        if (res.message == 'success') {
+                            window.location.href = '/';
+                            return;
+                        }
+                        else alert(res.message);
+                    } else {
+                        alert('로그인에 실패했습니다');
+                    }
+                }).catch((err) => {
+                    console.error(err);
+                    alert('로그인에 실패했습니다');
+                });
         }
 
-        fetch('/api/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                id,
-                password,
-            }),
-        })
-            .then((res) => res.json())
-            .then((res) => {
-                if (res.success) {
-                    window.location.href = '/';
-                } else if(res.message) {
-                    alert(res.message);
-                } else {
-                    alert('로그인에 실패했습니다');
-                }
-            }).catch((err) => {
-                console.error(err);
-                alert('로그인에 실패했습니다');
-            });
-    }
-
-    document.getElementById('login').addEventListener('submit', onSubmitLogin);
-</script>
+        document.getElementById('login').addEventListener('submit', onSubmitLogin);
+    </script>
+</body>
 
 </html>
