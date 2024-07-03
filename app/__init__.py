@@ -35,11 +35,12 @@ def create_app(test_config=None):
     app.user_model = user_model
 
     # import and register blueprints
-    @app.route("/")
+    @app.route("/", methods=["GET"])
     def hello_world():
         return render_template("index.html")
 
     from app.routes.member import member_bp
+
     app.register_blueprint(member_bp)
     # custom error handlers
 
