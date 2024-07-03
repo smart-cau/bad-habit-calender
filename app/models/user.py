@@ -25,7 +25,10 @@ class User:
         return self.collection.find_one({'email': email})
 
     def get_by_id(self, user_id):
-        return self.collection.find_one({'_id': ObjectId(user_id)})
+        user = self.collection.find_one({'_id': ObjectId(user_id)})
+        if user is None:
+            raise ValueError("User not found")
+        return user
 
     def check_password(self, user, password):
         return check_password_hash(user['password'], password)
