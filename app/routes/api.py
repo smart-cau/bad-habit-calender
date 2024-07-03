@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app, request, redirect, url_for
+from flask import Blueprint, current_app, request, redirect, url_for, jsonify
 from flask_jwt_extended import get_jwt_identity
 from app.utils.auth_decorator import jwt_or_redirect
 
@@ -9,9 +9,9 @@ api_bp = Blueprint("api", __name__, url_prefix="/api")
 @jwt_or_redirect()
 def delete_habit(habit_id):
     user_id = get_jwt_identity()
-    current_app.habit_service.delete_habit(habit_id, user_id)
+    current_app.habit_service.delete(habit_id, user_id)
 
-    return redirect(url_for("router.enroll_page"))
+    return jsonify({"message": "success"})
 
 
 @api_bp.route("/habit", methods=["POST"])
