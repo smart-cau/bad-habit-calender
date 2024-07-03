@@ -49,7 +49,7 @@ def login():
         return jsonify({"message": "비밀번호 또는 아이디가 틀렸습니다."}), 400
 
     response = make_response(jsonify({"message": "success"}))
-    response.set_cookie("LOGIN", "TRUE")
+    response.set_cookie("user_id", str(user["_id"]), httponly=True, samesite="Strict")
 
     return response
 

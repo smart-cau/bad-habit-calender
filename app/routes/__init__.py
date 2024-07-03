@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, current_app
+from flask import Blueprint, render_template
 from app.routes.auth import auth_router
 from app.utils.auth_decorator import when_logged_in
 
