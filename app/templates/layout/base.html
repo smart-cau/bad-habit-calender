@@ -22,6 +22,7 @@
                 {% if not type %}
                 <li>
                     <a href="/enroll/register"
+                        id="enroll-register"
                         class="flex gap-2 items-center border rounded-md py-1 px-2 border-[#6D29F6] text-[#6D29F6]">
                         <img src="/static/images/plus.png" alt="plus">
                         <span class="text-sm">등록하기</span>
@@ -42,6 +43,15 @@
         </header>
         {% block content %}{% endblock %}
     </div>
+    <script>
+        document.getElementById('enroll-register').addEventListener('click', (e) => {
+            e.preventDefault();
+            const queryParam = new URLSearchParams(window.location.search);
+            const currentDate =
+              queryParam.get("currentDay") || new Date().toLocaleDateString("en-CA");
+            location.href = `/enroll/register?currentDay=${currentDate}`;
+        });
+    </script>
 </body>
 
 </html>

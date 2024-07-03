@@ -3,6 +3,39 @@
 {% block content %}
 
 <main class="px-4 h-[calc(100vh-6rem)]">
-
+  <div class="flex flex-col gap-3">
+    <div>
+      <img src="/static/images/calendar.png" alt="calendar icon">
+      <div class="text-[#222B45]" id="currentDay"></div>
+    </div>
+    {% for habit in habits %}
+    <button onclick="onToggleCheck({{ habit._id }})" class="flex gap-3 items-center">
+      {% if habit.check %}
+      <img src="/static/images/check.png" alt="check">
+      {% else %}
+      <img src="/static/images/uncheck.png" alt="uncheck">
+      {% endif %}
+      <span>{{ habit.content }}</span>
+    </button>
+    {% endfor %}
+  </div>
 </main>
+<script>
+  const queryParam = new URLSearchParams(window.location.search);
+  const currentDate =
+    queryParam.get("currentDay") || new Date().toLocaleDateString("en-CA");
+  const currentDayElement = document.getElementById("currentDay");
+  currentDayElement.innerHTML = currentDate.replace(/-/g, " / ");
+  
+  const onToggleCheck = async (habitId) => 
+    await fetch(`/api/enroll/${habitId}/check`, {
+      method: "PATCH",
+    }).then((res) => {
+      if(res.ok) {
+        window.location.reload();
+      }
+    }).catch((err) => {
+      alert(err);
+    });
+</script>
 {% endblock %}
