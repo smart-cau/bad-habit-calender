@@ -1,4 +1,12 @@
-from flask import Blueprint, render_template, request, redirect, url_for, make_response
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    make_response,
+    jsonify,
+    current_app,
+)
+from app.services.user_service import UserService
 
 auth_router = Blueprint("auth", __name__)
 
@@ -20,11 +28,18 @@ def signup():
 
 @auth_router.route("/api/login", methods=["POST"])
 def login():
-    id = request.form["id"]
-    password = request.form["password"]
+    body = request.get_json()
+    id = body.get("id")
+    password = body.get("password")
 
-    # validate필요
-    response = make_response(redirect(url_for("router.home_page")))
+    if not current_app.user_service.is_user_exist(id):
+        return jsonify({"message": "비밀번호 또는 아이디가 틀렸습니다."}), 400
+
+    user = current_app.user_service.get_by_email(id)
+    if not current_app.user_service.check_password(user, password):
+        return jsonify({"message": "비밀번호 또는 아이디가 틀렸습니다."}), 400
+
+    response = make_response(jsonify({"message": "success"}))
     response.set_cookie("LOGIN", "TRUE")
 
     return response
