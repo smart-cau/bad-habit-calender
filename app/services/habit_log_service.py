@@ -33,6 +33,6 @@ class HabitLogService:
         self.user_service.get_by_id(user_id)
         return self.habit_log_model.get_list(user_id, datetime.strptime(date, '%Y-%m-%d'))
 
-    def set_check(self, log_id: str, user_id: str, check: bool):
+    def set_check(self, log_id: str, user_id: str):
         self.user_service.get_by_id(user_id)
-        return self.habit_log_model.set_check(log_id, check)
+        return self.habit_log_model.set_check(log_id)
