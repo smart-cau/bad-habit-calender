@@ -19,9 +19,10 @@
                 </li>
             </ul>
             <ul class="flex gap-2 items-center text-sm">
-                {% if not type == 'enroll' and not type == 'enroll_create' %}
+                {% if not type %}
                 <li>
-                    <a href="/enroll"
+                    <a href="/enroll/register"
+                        id="enroll-register"
                         class="flex gap-2 items-center border rounded-md py-1 px-2 border-[#6D29F6] text-[#6D29F6]">
                         <img src="/static/images/plus.png" alt="plus">
                         <span class="text-sm">등록하기</span>
@@ -36,16 +37,21 @@
                 </li>
             </ul>
             <div class="text-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                {% if type == 'enroll' %}
-                나쁜 습관 목록
-                {% endif %}
-                {% if type == 'enroll_create' %}
-                나쁜 습관 추가하기
-                {% endif %}
+                {% block title %}
+                {% endblock %}
             </div>
         </header>
         {% block content %}{% endblock %}
     </div>
+    <script>
+        document.getElementById('enroll-register').addEventListener('click', (e) => {
+            e.preventDefault();
+            const queryParam = new URLSearchParams(window.location.search);
+            const currentDate =
+              queryParam.get("currentDay") || new Date().toLocaleDateString("en-CA");
+            location.href = `/enroll/register?currentDay=${currentDate}`;
+        });
+    </script>
 </body>
 
 </html>
