@@ -69,32 +69,47 @@ class TestHabitLogService:
         self.habit_log_model = habit_log_model
         self.habit_log_service = habit_log_service
 
+    # today_logs = [{'_id(habit_id)': 23132, content: 'hell', check: False | True}]
+    def test_get_date_logs_empty_case(self):
+        date, habit_id0, habit_id1, user_id_str = self.log_stub()
+        today = '2024-07-04'
+
+        today_logs = self.habit_log_service.get_date_logs(user_id_str, today)
+
+        assert len(today_logs) == 2
+        assert today_logs[0]['_id'] == ObjectId(habit_id0)
+        assert today_logs[0]['check'] is True
+        assert today_logs[0]['content'] == "Read books"
+        assert today_logs[1]['_id'] == ObjectId(habit_id1)
+        assert today_logs[1]['check'] is False
+        assert today_logs[1]['content'] == "Meditate"
+
     def test_add_list(self):
-        date, habit_id1, habit_id2, user_id_str = self.log_stub()
+        date, habit_id0, habit_id1, user_id_str = self.log_stub()
 
         habit_logs = self.habit_log_service.get_list(user_id_str, date)
-        assert habit_logs[0]['habit_id'] == ObjectId(habit_id1)
-        assert habit_logs[1]['habit_id'] == ObjectId(habit_id2)
+        assert habit_logs[0]['habit_id'] == ObjectId(habit_id0)
+        assert habit_logs[0]['check'] is True
         for habit_log in habit_logs:
             assert habit_log['date'] == datetime(2024, 7, 4)
-            assert habit_log['check'] is False
 
     def log_stub(self):
         user_id_str = str(self.test_user['_id'])
-        habit_id1 = str(self.habit_service.add("Read books", user_id_str))
-        habit_id2 = str(self.habit_service.add("Meditate", user_id_str))
+        habit_id0 = str(self.habit_service.add("Read books", user_id_str))
+        habit_id1 = str(self.habit_service.add("Meditate", user_id_str))
         habit_logs = {'user_id': user_id_str, 'date': '2024-07-04',
-                      'habits': [habit_id1, habit_id2]}
+                      'habits': [habit_id0]}
         self.habit_log_service.add_list(habit_logs)
         date = '2024-07-04'
-        return date, habit_id1, habit_id2, user_id_str
+        return date, habit_id0, habit_id1, user_id_str
 
     def test_set_check(self):
-        date, habit_id1, habit_id2, user_id_str = self.log_stub()
+        date, habit_id0, habit_id1, user_id_str = self.log_stub()
 
-        logs = self.habit_log_service.get_list(user_id_str, date)
+        self.habit_log_service.set_check(user_id_str, date, habit_id0)
+        self.habit_log_service.set_check(user_id_str, date, habit_id1)
 
-        self.habit_log_service.set_check(logs[0]['_id'], user_id_str)
-
-        set_true_log = self.habit_log_model.collection.find_one({'_id': logs[0]['_id']})
-        assert set_true_log['check'] is True
+        log0 = self.habit_log_model.collection.find_one({'habit_id': ObjectId(habit_id0)})
+        log1 = self.habit_log_model.collection.find_one({'habit_id': ObjectId(habit_id1)})
+        assert log0['check'] is False
+        assert log1['check'] is True

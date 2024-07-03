@@ -14,11 +14,11 @@
     {% for habit in habits %}
     <div class="flex gap-4 items-center justify-between py-6 px-2">
       <span>{{ habit.content }}</span>
-      <div onclick="onChangePopup({{ habit._id }})" class="relative cursor-pointer">
+      <div onclick="onChangePopup('{{ habit._id }}')" class="relative cursor-pointer">
         <img src="/static/images/threedot.png" alt="submenu" />
         <div
           class="popup popup-{{ habit._id }} hidden absolute right-0 top-0 bg-[#EC1A1A] text-[#FFF2F2] rounded-md py-1 px-2 z-10 w-max">
-          <button onclick="onRemoveHabit({{ habit._id }})">삭제하기</button>
+          <button onclick="onRemoveHabit('{{ habit._id }}')">삭제하기</button>
         </div>
       </div>
     </div>
@@ -50,8 +50,22 @@
   const onRemoveHabit = async (id) =>
     await fetch(`/api/habit/${id}`, {
       method: "DELETE",
-    }).then((res) => { if (res.ok) { window.location.reload(); } })
-      .catch((err) => alert(err));
+    }).then((res) => res.json())
+      .then((res) => {
+        if (res.message) {
+          if (res.message == 'success') {
+            alert('삭제되었습니다.');
+            window.location.reload();
+            return;
+          }
+          else alert(res.message);
+        } else {
+          alert('로그인에 실패했습니다');
+        }
+      }).catch((err) => {
+        console.error(err);
+        alert('삭제에 실패했습니다. 다시 시도해주세요.');
+      });
 </script>
 
 {% endblock %}

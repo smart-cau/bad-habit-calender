@@ -1,5 +1,5 @@
 from typing import Dict
-
+from datetime import datetime
 from bson import ObjectId
 
 
@@ -20,13 +20,24 @@ class HabitLog:
 
         return result
 
-    def set_check(self, log_id: str):
-        habit_log = self.collection.find_one({'_id': ObjectId(log_id)})
+    def set_check(self, user_id: str, date: str, habit_id: str):
+        habit_log = self.collection.find_one(
+            {'user_id': ObjectId(user_id),
+             'date': datetime.strptime(date, "%Y-%m-%d"),
+             'habit_id': ObjectId(habit_id)
+             })
         if habit_log is None:
-            raise ValueError(f'habit_log {log_id} not found')
+            self.collection.insert_one({
+                'user_id': ObjectId(user_id),
+                'date': datetime.strptime(date, "%Y-%m-%d"),
+                'habit_id': ObjectId(habit_id),
+                'check': True
+            })
+            return True
+        result = self.collection.update_one({'_id': habit_log['_id']},
+                                            {'$set': {'check': not habit_log['check']}})
 
-        result = self.collection.update_one({'_id': ObjectId(log_id)}, {'$set': {'check': not habit_log['check']}})
         if result.modified_count == 0:
-            raise ValueError(f'habit_log {log_id} not found')
+            raise ValueError(f'Error occurred during setting check value')
 
         return True

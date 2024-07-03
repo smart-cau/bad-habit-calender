@@ -9,7 +9,7 @@
 </head>
 
 <body class="bg-slate-200">
-    <div class="max-w-[420px] bg-white h-screen m-auto">
+    <div class="max-w-[420px] bg-white h-screen m-auto relative">
         <header class="relative px-6 py-8 flex justify-between items-center">
             <ul class="flex-1">
                 <li>
@@ -21,8 +21,7 @@
             <ul class="flex gap-2 items-center text-sm">
                 {% if not type %}
                 <li>
-                    <a href="/enroll/register"
-                        id="enroll-register"
+                    <a href="/enroll/register" id="enroll-register"
                         class="flex gap-2 items-center border rounded-md py-1 px-2 border-[#6D29F6] text-[#6D29F6]">
                         <img src="/static/images/plus.png" alt="plus">
                         <span class="text-sm">등록하기</span>
@@ -30,7 +29,8 @@
                 </li>
                 {% endif %}
                 <li>
-                    <button class="flex gap-2 items-center rounded-md py-1 pl-2 text-[#8F9BB3]">
+                    <button onclick="menuEngine.toggleMenu()"
+                        class="flex gap-2 items-center rounded-md py-1 pl-2 text-[#8F9BB3]">
                         <img src="/static/images/hamberger.png" alt="hamberger">
                         <span>메뉴</span>
                     </button>
@@ -42,15 +42,71 @@
             </div>
         </header>
         {% block content %}{% endblock %}
+        <div id="menu-bg"
+            class="absolute backdrop-blur-sm w-full h-full left-0 top-0 z-20 -translate-y-full transition-transform duration-500 ease-out">
+        </div>
+        <div id="detail-menu"
+            class="absolute flex flex-col items-end gap-4 top-8 right-4 text-sm opacity-0 -z-10 transition-opacity duration-700 text-[#8F9BB3]">
+            <button onclick="menuEngine.toggleMenu()" class="flex gap-2 items-center rounded-md py-1 pl-2  p-2">
+                <img src="/static/images/multiple.png" alt="close">
+                <span>메뉴</span>
+            </button>
+            <a href="/enroll" class="flex gap-2 p-2">
+                <span>Bad Habit 목록 보기</span>
+                <img src="/static/images/arhive_light.png" alt="go bad habbit list">
+            </a>
+            <button class="flex gap-2 p-2">
+                <span>로그아웃</span>
+                <img src="/static/images/logout.png" alt="logout">
+            </button>
+        </div>
     </div>
     <script>
-        document.getElementById('enroll-register').addEventListener('click', (e) => {
-            e.preventDefault();
-            const queryParam = new URLSearchParams(window.location.search);
-            const currentDate =
-              queryParam.get("currentDay") || new Date().toLocaleDateString("en-CA");
-            location.href = `/enroll/register?currentDay=${currentDate}`;
-        });
+        const enrollRegister = document.getElementById('enroll-register');
+        if (enrollRegister)
+            enrollRegister
+                .addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const queryParam = new URLSearchParams(window.location.search);
+                    const currentDate =
+                        queryParam.get("currentDay") || new Date().toLocaleDateString("en-CA");
+                    location.href = `/enroll/register?currentDay=${currentDate}`;
+                });
+
+        const menu = () => {
+            let isMenuOpen = false;
+            const menuBg = document.getElementById('menu-bg');
+            const detailMenu = document.getElementById('detail-menu');
+            const toggleMenu = () => {
+                menuBg.style.transform = isMenuOpen ? 'translateY(-100%)' : 'translateY(0)';
+                detailMenu.style.opacity = isMenuOpen ? '0' : '1';
+                detailMenu.style.zIndex = isMenuOpen ? '-1' : '20';
+                isMenuOpen = !isMenuOpen
+            };
+
+            return {
+                toggleMenu,
+                isMenuOpen
+            }
+        }
+        const menuEngine = menu();
+
+        const logout = () => {
+            fetch('/api/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(res => {
+                if (res.ok) {
+                    location.href = '/login';
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('로그아웃에 실패했습니다.');
+            });
+        }
     </script>
 </body>
 
