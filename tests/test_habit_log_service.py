@@ -94,7 +94,7 @@ class TestHabitLogService:
 
         logs = self.habit_log_service.get_list(user_id_str, date)
 
-        self.habit_log_service.set_check(logs[0]['log_id'], user_id_str, True)
+        self.habit_log_service.set_check(logs[0]['_id'], user_id_str)
 
-        set_true_log = self.habit_log_model.collection.find_one({'_id': logs[0]['log_id']})
+        set_true_log = self.habit_log_model.collection.find_one({'_id': logs[0]['_id']})
         assert set_true_log['check'] is True
