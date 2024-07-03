@@ -4,8 +4,12 @@ from flask import Flask, render_template
 from pymongo import MongoClient
 from dotenv import load_dotenv
 
+from app.models.habit import Habit
+from app.models.habit_log import HabitLog
 from app.models.user import User
-
+from app.services.habit_log_service import HabitLogService
+from app.services.habit_service import HabitService
+from app.services.user_service import UserService
 
 load_dotenv(".env")
 
@@ -30,9 +34,18 @@ def create_app(test_config=None):
     # init models
     user_model = User(db)
     user_model.create_index()
+    habit_model = Habit(db)
+    habit_log_model = HabitLog(db)
+
+    # init services
+    user_service = UserService(user_model)
+    habit_service = HabitService(habit_model, user_service)
+    habit_log_service = HabitLogService(habit_log_model, user_service, habit_service)
 
     # application contexts
-    app.user_model = user_model
+    app.user_service = user_service
+    app.habit_service = habit_service
+    app.habit_log_service = habit_log_service
 
     # import and register blueprints
     from app.routes import router
