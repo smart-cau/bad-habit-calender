@@ -28,9 +28,10 @@ def post_habit():
 @api_bp.route("/habit/toggle", methods=["POST"])
 @jwt_or_redirect()
 def toggle():
-    log_id = request.json.get("_id")
+    habit_id = request.json.get("_id")
+    date = request.json.get("currentDay")
     user_id = get_jwt_identity()
 
-    current_app.habit_log_service.set_check(log_id, user_id)
+    current_app.habit_log_service.set_check(user_id, date, habit_id)
 
-    return redirect(url_for("router.enroll_page"))
+    return jsonify({"message": "success"})

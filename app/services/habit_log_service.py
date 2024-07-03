@@ -35,9 +35,25 @@ class HabitLogService:
 
     def get_list(self, user_id: str, date: str):
         self.user_service.get_by_id(user_id)
-        return self.habit_log_model.get_list(
+        logs = self.habit_log_model.get_list(
             user_id, datetime.strptime(date, "%Y-%m-%d")
         )
+
+        habits = self.habit_service.get_habits(user_id)
+
+        results = []
+        for habit in habits:
+            habit_id = str(habit["_id"])
+            check = False
+            for log in logs:
+                if str(log["habit_id"]) == habit_id:
+                    check = log["check"]
+                    break
+            results.append(
+                {"_id": habit_id, "content": habit["content"], "check": check}
+            )
+
+        return results
 
     def set_check(self, user_id: str, date: str, habit_id):
         self.user_service.get_by_id(user_id)
@@ -46,13 +62,25 @@ class HabitLogService:
 
     def get_date_logs(self, user_id: str, date: str):
         self.user_service.get_by_id(user_id)
-        logs = self.habit_log_model.get_list(user_id, datetime.strptime(date, "%Y-%m-%d"))
+        logs = self.habit_log_model.get_list(
+            user_id, datetime.strptime(date, "%Y-%m-%d")
+        )
 
         habits = self.habit_service.get_habits(user_id)
-        enrolled_habit_ids = {log['habit_id'] for log in logs}
-        results = [{'_id': habit['_id'],
-                    'content': habit['content'], 'check': habit['_id'] in enrolled_habit_ids
-                    }
-                   for habit in habits]
+
+        results = []
+        for habit in habits:
+            habit_id = str(habit["_id"])
+            for log in logs:
+                if str(log["habit_id"]) == habit_id:
+                    if log["check"]:
+                        results.append(
+                            {
+                                "_id": habit_id,
+                                "content": habit["content"],
+                                "check": log["check"],
+                            }
+                        )
+                    break
 
         return results

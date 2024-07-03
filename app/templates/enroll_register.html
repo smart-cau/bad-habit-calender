@@ -33,12 +33,11 @@
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ _id }),
+      body: JSON.stringify({ _id, currentDay: currentDate}),
     }).then((res) => res.json())
       .then((res) => {
         if (res.message) {
           if (res.message == "success") {
-            alert("변경되었습니다.");
             window.location.reload();
             return;
           }

@@ -11,7 +11,7 @@ const showCurrentDayhabit = (data) => {
       ? "/static/images/success.png"
       : "/static/images/fail.png";
     const div = cElm("div");
-    div.textContent = item.title;
+    div.textContent = item.content;
     li.appendChild(image);
     li.appendChild(div);
     ul.appendChild(li);
@@ -32,6 +32,5 @@ const currentDate =
 fetch(`/api/enrolls?currentDay=${currentDate}`)
   .then((response) => response.json())
   .then((data) => {
-    console.log(data);
     updateCurrentDayhabit(data);
   });
