@@ -7,13 +7,10 @@ class User:
     def __init__(self, db):
         self.collection = db.users
 
-    def create(self, email, password):
+    def create_user(self, email, password):
         if self.get_by_email(email):
             raise ValueError("Email already exists")
-        user = {
-            'email': email,
-            'password': generate_password_hash(password)
-        }
+        user = {"email": email, "password": generate_password_hash(password)}
         try:
             created_user = self.collection.insert_one(user)
             return created_user.inserted_id
@@ -22,16 +19,13 @@ class User:
             raise ValueError("Email already exists")
 
     def get_by_email(self, email):
-        return self.collection.find_one({'email': email})
+        return self.collection.find_one({"email": email})
 
     def get_by_id(self, user_id):
-        user = self.collection.find_one({'_id': ObjectId(user_id)})
+        user = self.collection.find_one({"_id": ObjectId(user_id)})
         if user is None:
             raise ValueError("User not found")
         return user
-
-    def check_password(self, user, password):
-        return check_password_hash(user['password'], password)
 
     def create_index(self):
         self.collection.create_index("email", unique=True)
