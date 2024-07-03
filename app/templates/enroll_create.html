@@ -1,0 +1,23 @@
+{% extends "layout/base.html" %}
+{% block content %}
+
+<main class="px-4 h-[calc(100vh-6rem)]">
+  <section class="h-full">
+    <form action="/api/enroll/create" class="h-full flex flex-col justify-between">
+      <div>
+        <div class="w-full flex items-center border rounded-md border-[#EDF1F7] placeholder:text-[#8F9BB3]">
+          <input class="flex-1 p-3 bg-transparent" type="text" placeholder="당신의 나쁜 습관은 무엇인가요?" required name="content">
+          <span class="pr-3 text-[#222B45] font-semibold">해버리기</span>
+        </div>
+        <div class="py-4 space-y-2 text-[#8F9BB3]">
+          <div>예시로 다음과 같이 작성하면 이해하기 쉬워요!</div>
+          <div class="pl-2">1. 유튜브 2시간 이상 시청</div>
+          <div class="pl-2">2. 개발 25시간 이상</div>
+          <div class="pl-2">3. 게임 2시간 이상</div>
+        </div>
+      </div>
+      <button class="mb-4 w-full bg-[#735BF2] text-[#FFFFFF] py-4 rounded-lg">저장하기</button>
+    </form>
+  </section>
+</main>
+{% endblock %}
