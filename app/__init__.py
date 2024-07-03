@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, render_template
 from pymongo import MongoClient
 from dotenv import load_dotenv
 
@@ -11,6 +11,7 @@ from app.services.habit_log_service import HabitLogService
 from app.services.habit_service import HabitService
 from app.services.user_service import UserService
 from flask_jwt_extended import JWTManager
+from datetime import timedelta
 
 load_dotenv(".env")
 
@@ -24,11 +25,15 @@ def create_app(test_config=None):
         MONGO_URI=os.getenv("MONGO_URI"),
         JWT_TOKEN_LOCATION="cookies",
         JWT_ACCESS_COOKIE_PATH="/",
-        JWT_REFRESH_COOKIE_PATH="/refresh",
         JWT_COOKIE_CSRF_PROTECT=False,
+        JWT_ACCESS_TOKEN_EXPIRES=timedelta(days=1),
     )
 
     jwt = JWTManager(app)
+
+    @jwt.expired_token_loader
+    def my_expired_token_callback(jwt_header, jwt_payload):
+        return render_template("login.html")
 
     if test_config is not None:
         app.config.update(test_config)

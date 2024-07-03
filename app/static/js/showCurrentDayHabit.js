@@ -1,7 +1,3 @@
-const tempData = [
-  { title: "유튜브 1시간 이상 보기", success: false },
-  { title: "개발 25시간 이상 하기", success: true },
-];
 const cElm = (elementType) => document.createElement(elementType);
 
 const showCurrentDayhabit = (data) => {
@@ -24,10 +20,18 @@ const showCurrentDayhabit = (data) => {
 };
 
 const updateCurrentDayhabit = (data) => {
-  const elm = showCurrentDayhabit(tempData);
+  const elm = showCurrentDayhabit(data);
   const currentDayhabit = document.querySelector("#currentDayhabit");
   currentDayhabit.innerHTML = "";
   currentDayhabit.appendChild(elm);
 };
 
-updateCurrentDayhabit(tempData);
+const queryParam = new URLSearchParams(window.location.search);
+const currentDate =
+  queryParam.get("currentDay") || new Date().toLocaleDateString("en-CA");
+fetch(`/api/enrolls?currentDay=${currentDate}`)
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data);
+    updateCurrentDayhabit(data);
+  });

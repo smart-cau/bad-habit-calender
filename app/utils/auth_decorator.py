@@ -7,8 +7,8 @@ def jwt_or_redirect():
     def wrapper(fn):
         @wraps(fn)
         def decorator(*args, **kwargs):
-            verify_jwt_in_request(optional=True)
-            if not get_jwt_identity():
+            is_valid = verify_jwt_in_request(optional=True)
+            if not is_valid or not get_jwt_identity():
                 return redirect(url_for("router.auth.login_page"))
             else:
                 return fn(*args, **kwargs)
