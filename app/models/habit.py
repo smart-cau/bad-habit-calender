@@ -2,17 +2,10 @@ from bson import ObjectId
 
 
 class Habit:
-    def __init__(self, db, user_model):
+    def __init__(self, db):
         self.collection = db.habits
-        self.user_model = user_model
 
-    def add(self, habit_content, user_id):
-        self.user_model.get_by_id(user_id)
-        habit = {
-            'content': habit_content,
-            'user_id': user_id,
-        }
-
+    def add(self, habit):
         return self.collection.insert_one(habit).inserted_id
 
     def get_habits(self, user_id):
